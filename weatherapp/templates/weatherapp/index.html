@@ -4,32 +4,31 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://cdn.tailwindcss.com"></script>
     <title>What is the current weather?</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.6.2/css/bulma.css" />
+    <!-- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.6.2/css/bulma.css" /> -->
 </head>
 
 <body>
-    <section class="hero is-primary">
-        <div class="hero-body">
-            <div class="container">
-                <h1 class="title">
-                    What's the weather like?
-                </h1>
-            </div>
+    <section class="bg-gray-600">
+        <div class="container mx-auto">
+            <h1 class="text-4xl text-white font-bold py-8">
+                What's the weather in your city?
+            </h1>
         </div>
     </section>
-    <section class="section">
-        <div class="container">
-            <div class="columns">
-                <div class="column is-offset-4 is-4">
+    <section class="py-8">
+        <div class="container mx-auto">
+            <div class="flex justify-center">
+                <div class="w-64">
                     <form method="POST">
                         {% csrf_token %}
-                        <div class="field has-addons">
-                            <div class="control is-expanded">
+                        <div class="flex items-center">
+                            <div class="flex-1">
                                 {{ form.name }}
                             </div>
-                            <div class="control">
-                                <button class="button is-info">
+                            <div class="ml-2">
+                                <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
                                     Add New City
                                 </button>
                             </div>
@@ -39,29 +38,29 @@
             </div>
         </div>
     </section>
-    <section class="section">
-        <div class="container">
-            <div class="columns">
-                <div class="column is-offset-4 is-4">
+    <section class="py-8">
+        <div class="container mx-auto">
+            <div class="flex justify-center">
+                <div class="w-64">
                     {% for weather in weather_data %}
-                    <div class="box">
-                        <article class="media">
-                            <div class="media-left">
-                                <figure class="image is-50x50">
+                    <div class="bg-white shadow-md rounded-md p-4 mb-4">
+                        <div class="flex items-center">
+                            <div class="mr-4">
+                                <figure class="w-12 h-12">
                                     <img src="http://openweathermap.org/img/w/{{ weather.icon }}.png" alt="Image">
                                 </figure>
                             </div>
-                            <div class="media-content">
-                                <div class="content">
-                                    <p>
-                                        <span class="title">{{ weather.city }}</span>
-                                        <br>
-                                        <span class="subtitle">{{ weather.temperature }}° F</span>
-                                        <br> {{ weather.description }}
-                                    </p>
+                            <div class="flex-1">
+                                <div class="mb-2">
+                                    <h2 class="text-xl font-bold">{{ weather.city }}</h2>
+                                </div>
+                                <div class="text-lg">
+                                    <span class="font-bold">{{ weather.temperature }}° F</span>
+                                    <br>
+                                    {{ weather.description }}
                                 </div>
                             </div>
-                        </article>
+                        </div>
                     </div>
                     {% endfor %}
                 </div>
@@ -69,9 +68,8 @@
         </div>
     </section>
     <footer class="footer">
-        <h2>Made by KDUAH of <a href="kdwebdeveloper.vercel.app">PCkingpin INC</a></h2>
-        <p>Contact Developer through duah229@gmail.com</p>
     </footer>
 </body>
+
 
 </html>
