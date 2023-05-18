@@ -24,7 +24,7 @@
                     <form method="POST">
                         {% csrf_token %}
                         <div class="flex flex-row items-center">
-                            <input type="text" placeholder="Enter City Name" class="flex h-[40px] border-2 border-black">
+                            <input type="text" name='city' placeholder="Enter City Name" class="flex h-[40px] border-2 border-black">
                             <div class="flex-1">
                                 {{ form.name }}
                             </div>
@@ -48,17 +48,17 @@
                         <div class="flex items-center">
                             <div class="mr-4">
                                 <figure class="w-12 h-12">
-                                    <img src="http://openweathermap.org/img/w/{{ weather.icon }}.png" alt="Image">
+                                    <img src="http://openweathermap.org/img/w/{{ data.icon }}.png" alt="Image">
                                 </figure>
                             </div>
                             <div class="flex-1">
                                 <div class="mb-2">
-                                    <h2 class="text-xl font-bold">City: {{ weather.city }}</h2>
+                                    <h2 class="text-xl text-black font-bold">City: {{ data.city }}</h2>
                                 </div>
                                 <div class="text-lg">
-                                    <span class="font-bold">Temperature: {{ weather.temperature }}° F</span>
+                                    <span class="font-bold">Temperature: {{ data.temperature }}° F</span>
                                     <br>
-                                    {{ weather.description }}
+                                    {{ data.description }}
                                 </div>
                             </div>
                         </div>

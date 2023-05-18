@@ -1,6 +1,4 @@
-# import json to load json data to python dictionary
 import json
-# urllib.request to make a request to api
 import urllib.request
 from django.shortcuts import render
 from django.views.decorators.csrf import csrf_exempt
@@ -9,32 +7,43 @@ from django.views.decorators.csrf import csrf_exempt
 def index(request):
     if request.method == 'POST':
         city = request.POST['city']
-        # api key might be expired use your own api_key
-        # place api_key in place of appid ="your_api_key_here"
 
-        # source contain JSON data from API
+        # Construct the API request URL with the city parameter
+        url = 'http://api.openweathermap.org/data/2.5/weather?q=' + city + '&appid=d2e535af4bbcdabcac6c5b06b263c928'
+        
+        try:
+            # Make the API request
+            response = urllib.request.urlopen(url)
+            
+            # Read the response data
+            data = response.read().decode('utf-8')
+            
+            # Convert JSON data to a dictionary
+            list_of_data = json.loads(data)
 
-        source = urllib.request.urlopen(
-            'http://api.openweathermap.org/data/2.5/weather?id=524901'
-            + city + '&appid=d2e535af4bbcdabcac6c5b06b263c928').read()
-        print(source)
-
-        # converting JSON data to a dictionary
-        list_of_data = json.loads(source)
-        print(list_of_data)
-
-        # data for variable list_of_data
-        data = {
-            "city": list_of_data['name'],
-            "country_code": list_of_data['sys']['country'],
-            "coordinate": str(list_of_data['coord']['lon']) + ' ' + str(list_of_data['coord']['lat']),
-            "temp": str(list_of_data['main']['temp']) + 'K',
-            "pressure": str(list_of_data['main']['pressure']),
-            "humidity": str(list_of_data['main']['humidity']),
-            "description": list_of_data['weather'][0]['description'],
-            "icon": list_of_data['weather'][0]['icon'],
-        }
-        print(data)
+            # Extract the required weather data from the dictionary
+            data = {
+                "city": list_of_data['name'],
+                "country_code": list_of_data['sys']['country'],
+                "coordinate": str(list_of_data['coord']['lon']) + ' ' + str(list_of_data['coord']['lat']),
+                "temp": str(list_of_data['main']['temp']) + 'K',
+                "pressure": str(list_of_data['main']['pressure']),
+                "humidity": str(list_of_data['main']['humidity']),
+                "description": list_of_data['weather'][0]['description'],
+                "icon": list_of_data['weather'][0]['icon'],
+            }
+            
+            # Render the response with the weather data
+            return render(request, "weatherapp/index.html", data)
+        
+        except urllib.error.HTTPError as e:
+            # Handle HTTP errors
+            return render(request, "weatherapp/error.html", {'error': str(e)})
+        
+        except Exception as e:
+            # Handle other exceptions
+            return render(request, "weatherapp/error.html", {'error': str(e)})
+    
     else:
-        data = {}
-    return render(request, "weatherapp/index.html", data)
+        # Render the form initially without weather data
+        return render(request, "weatherapp/index.html")

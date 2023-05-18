@@ -1,4 +1,5 @@
 import requests
+import json
 
 url = "http://api.openweathermap.org/data/2.5/weather?id=524901&appid=d2e535af4bbcdabcac6c5b06b263c928"  # Replace with the actual API endpoint
 
@@ -12,3 +13,9 @@ if response.status_code == 200:
     print(data)
 else:
     print("Request failed with status code:", response.status_code)
+    
+filename = "data.json"  # Specify the desired filename
+
+# Open the file in write mode
+with open(filename, "w") as file:
+    json.dump(data, file)
