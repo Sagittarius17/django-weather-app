@@ -20,6 +20,8 @@ def index(request):
             
             # Convert JSON data to a dictionary
             list_of_data = json.loads(data)
+            # if list_of_data:
+            #     print(list_of_data)
 
             # Extract the required weather data from the dictionary
             data = {
