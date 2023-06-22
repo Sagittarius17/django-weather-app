@@ -1,51 +1,58 @@
-import json
-import urllib.request
 from django.shortcuts import render
+import requests
+import datetime
 from django.views.decorators.csrf import csrf_exempt
 
 @csrf_exempt
 def index(request):
+    api_key = 'f798c41bc81f008112a16d2f9d22f441'
+    current_weather_url = 'https://api.openweathermap.org/data/2.5/weather?q={}&appid={api_key}'
+    forecast_url = 'https://api.openweathermap.org/data/2.5/onecall?lat={lat}&lon={lon}&exclude=current,minutely,hourly,alerts&appid={api_key}'
+
     if request.method == 'POST':
-        city = request.POST['city']
+        city1 = request.POST['city1']
+        city2 = request.POST.get('city2', None)
 
-        # Construct the API request URL with the city parameter
-        url = 'http://api.openweathermap.org/data/2.5/weather?q=' + city + '&appid=d2e535af4bbcdabcac6c5b06b263c928'
-        
-        try:
-            # Make the API request
-            response = urllib.request.urlopen(url)
-            
-            # Read the response data
-            data = response.read().decode('utf-8')
-            
-            # Convert JSON data to a dictionary
-            list_of_data = json.loads(data)
-            if list_of_data:
-                print(list_of_data)
+        weather_data1, daily_forecasts1 = fetch_weather_and_forecast(city1, api_key, current_weather_url, forecast_url)
 
-            # Extract the required weather data from the dictionary
-            data = {
-                "city": list_of_data['name'],
-                "country_code": list_of_data['sys']['country'],
-                "coordinate": str(list_of_data['coord']['lon']) + ' ' + str(list_of_data['coord']['lat']),
-                "temp": str(list_of_data['main']['temp']) + 'K',
-                "pressure": str(list_of_data['main']['pressure']),
-                "humidity": str(list_of_data['main']['humidity']),
-                "description": list_of_data['weather'][0]['description'],
-                "icon": list_of_data['weather'][0]['icon'],
-            }
-            
-            # Render the response with the weather data
-            return render(request, "weatherapp/index.html", data)
-        
-        except urllib.error.HTTPError as e:
-            # Handle HTTP errors
-            return render(request, "weatherapp/error.html", {'error': str(e)})
-        
-        except Exception as e:
-            # Handle other exceptions
-            return render(request, "weatherapp/error.html", {'error': str(e)})
-    
+        if city2:
+            weather_data2, daily_forecasts2 = fetch_weather_and_forecast(city2, api_key, current_weather_url, forecast_url)
+        else:
+            weather_data2, daily_forecasts2 = None, None
+
+        context = {
+            'weather_data1': weather_data1,
+            'daily_forecasts1': daily_forecasts1,
+            'weather_data2': weather_data2,
+            'daily_forecasts2': daily_forecasts2,
+        }
+
+        return render(request, 'weatherapp/index.html', context)
     else:
-        # Render the form initially without weather data
-        return render(request, "weatherapp/index.html")
+        return render(request, 'weatherapp/index.html')
+
+
+def fetch_weather_and_forecast(city, api_key, current_weather_url, forecast_url):
+    response = requests.get(current_weather_url.format(city, api_key)).json()
+    lat, lon = response['coord']['lat'], response['coord']['lon']
+    forecast_response = requests.get(forecast_url.format(lat, lon, api_key)).json()
+    print(forecast_response)
+
+    weather_data = {
+        'city': city,
+        'temperature': round(response['main']['temp'] - 273.15, 2),
+        'description': response['weather'][0]['description'],
+        'icon': response['weather'][0]['icon'],
+    }
+
+    daily_forecasts = []
+    for daily_data in forecast_response['daily'][:5]:
+        daily_forecasts.append({
+            'day': datetime.datetime.fromtimestamp(daily_data['dt']).strftime('%A'),
+            'min_temp': round(daily_data['temp']['min'] - 273.15, 2),
+            'max_temp': round(daily_data['temp']['max'] - 273.15, 2),
+            'description': daily_data['weather'][0]['description'],
+            'icon': daily_data['weather'][0]['icon'],
+        })
+
+    return weather_data, daily_forecasts

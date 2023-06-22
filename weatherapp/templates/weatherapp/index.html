@@ -1,76 +1,33 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <script src="https://cdn.tailwindcss.com"></script>
-    <title>What is the current weather?</title>
-    <!-- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.6.2/css/bulma.css" /> -->
+    <title>Weather App</title>
+    <link rel="stylesheet" href="{% static 'style.css' %}">
 </head>
-
 <body>
-    <section class="bg-gray-600">
-        <div class="container mx-auto">
-            <h1 class="text-4xl text-white font-bold py-8">
-                What's the weather in your city?
-            </h1>
-        </div>
-    </section>
-    <section class="py-8">
-        <div class="container mx-auto">
-            <div class="flex justify-center">
-                <div class="">
-                    <form method="POST">
-                        {% csrf_token %}
-                        <div class="flex flex-row items-center">
-                            <input type="text" name='city' placeholder="Enter City Name" class="flex h-[40px] border-2 border-black">
-                            <div class="flex-1">
-                                {{ data.name }}
-                            </div>
-                            <div class="ml-2">
-                                <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 ">
-                                    Add New City
-                                </button>
-                            </div>
-                        </div>
-                    </form>
-                </div>
-            </div>
-        </div>
-    </section>
-    <section class="py-8">
-        <div class="container mx-auto">
-            <div class="flex justify-center">
-                <div class="w-64">
-                    {% for data in data %}
-                    <div class="bg-white shadow-md rounded-md p-4 mb-4">
-                        <div class="flex items-center">
-                            <div class="mr-4">
-                                <figure class="w-12 h-12">
-                                    <img src="http://openweathermap.org/img/w/{{ data.icon }}.png" alt="Image">
-                                </figure>
-                            </div>
-                            <div class="flex-1">
-                                <div class="mb-2">
-                                    <h2 class="text-xl text-black font-bold">City: {{ data.city }}</h2>
-                                </div>
-                                <div class="text-lg">
-                                    <span class="font-bold">Temperature: {{ data.temperature }}° F</span>
-                                    <br>
-                                    {{ data.description }}
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    {% endfor %}
-                </div>
-            </div>
-        </div>
-    </section>
-    <footer class="footer">
-    </footer>
+
+<form method="post">
+  {% csrf_token %}
+  <input type="text" name="city1" placeholder="Enter city 1">
+  <input type="text" name="city2" placeholder="Enter city 2">
+  <button type="submit">Compare Weather</button>
+</form>
+
+<div class="comparison-container">
+  {% if weather_data1 %}
+    <div class="city-container">
+      {% include 'weather_app/city_weather.html' with weather_data=weather_data1 daily_forecasts=daily_forecasts1 %}
+    </div>
+  {% endif %}
+  {% if weather_data2 %}
+    <div class="city-container">
+      {% include 'weather_app/city_weather.html' with weather_data=weather_data2 daily_forecasts=daily_forecasts2 %}
+    </div>
+  {% endif %}
+</div>
+
 </body>
-
-
 </html>
