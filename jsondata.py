@@ -1,7 +1,7 @@
 import requests
 import json
 
-url = "http://api.openweathermap.org/data/2.5/weather?id=524901&appid=d2e535af4bbcdabcac6c5b06b263c928"  # Replace with the actual API endpoint
+url = "https://api.openweathermap.org/data/2.5/weather?id=524901&appid=d2e535af4bbcdabcac6c5b06b263c928"  # Replace with the actual API endpoint
 
 # Make a GET request to the API
 response = requests.get(url)
