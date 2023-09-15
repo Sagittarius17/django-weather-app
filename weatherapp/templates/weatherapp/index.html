@@ -5,47 +5,29 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Weather App</title>
+    <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="{% static 'style.css' %}">
 </head>
 
-{% comment %} <body>
+<body class="bg-slate-700 text-white min-h-screen items-center justify-center">
 
     <form method="post">
-    {% csrf_token %}
-    <input type="text" name="city" placeholder="Enter city name">
-    <input type="text" name="city2" placeholder="Enter city 2">
-    <button type="submit">Compare Weather</button>
+        <input type="text" name="city" placeholder="Enter city name">
+        <input type="text" name="city2" placeholder="Enter city name">
+        <button type="submit" class='bg-purple-700 hover:bg-purple-400 h-10 p-2'>Compare Weather</button>
     </form>
 
-    <div class="comparison-container">
-    {% if weather_data %}
-        <div class="city-container">
-        {% include 'weather_app/weather.html' with weather_data=weather_data1 daily_forecasts=daily_forecasts %}
-        </div>
-    {% endif %}
-    {% if weather_data2 %}
-        <div class="city-container">
-        {% include 'weather_app/city_weather.html' with weather_data=weather_data2 daily_forecasts=daily_forecasts2 %}
-        </div>
-    {% endif %}
-    </div>
-
-</body> {% endcomment %}
-
-<body class="bg-blue-200 min-h-screen flex items-center justify-center">
-
-    <div class="bg-white p-8 rounded-lg shadow-md w-full max-w-md">
-        <h1 class="text-2xl font-bold mb-4">Weather in {{ city }}</h1>
-        
-        <div class="flex items-center mb-4">
-            <img src="http://openweathermap.org/img/w/{{ icon }}.png" alt="Weather Icon" class="w-16 h-16 mr-4">
-            <div>
-                <h2 class="text-xl font-semibold">{{ temperature }}°C</h2>
-                <p class="text-gray-600">{{ description }}</p>
+    <div class="comparison-container flex flex-row bg-slate-500 w-full items-center justify-center">
+        {% if weather_data %}
+            <div class="city-container w-full">
+                {% include 'weatherapp/weather.html' with weather_data=weather_data daily_forecasts=daily_forecasts %}
             </div>
-        </div>
-
-        <a href="/" class="text-blue-500 hover:underline">Check another city</a>
+        {% endif %}
+        {% if weather_data2 %}
+            <div class="city-container w-full">
+                {% include 'weatherapp/weather.html' with weather_data=weather_data2 daily_forecasts=daily_forecasts2 %}
+            </div>
+        {% endif %}
     </div>
 
 </body>
