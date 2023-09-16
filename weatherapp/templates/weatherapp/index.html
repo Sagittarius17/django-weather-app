@@ -3,6 +3,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <link rel="icon" href="https://shuvendusingha.onrender.com/favicon.ico">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Weather App</title>
     <script src="https://cdn.tailwindcss.com"></script>
@@ -11,20 +12,23 @@
 
 <body class="bg-slate-700 text-white min-h-screen items-center justify-center">
 
-    <form method="post">
-        <input type="text" name="city" placeholder="Enter city name">
-        <input type="text" name="city2" placeholder="Enter city name">
-        <button type="submit" class='bg-purple-700 hover:bg-purple-400 h-10 p-2'>Compare Weather</button>
-    </form>
+    <div class='flex justify-center items-center m-10'>
+        <form method="post">
+            {% csrf_token %}
+            <input type="text" name="city" class='bg-white h-[38px] pl-2 text-black' placeholder="Enter city name">
+            <input type="text" name="city2" class='bg-white h-[38px] pl-2 text-black' placeholder="Enter city name">
+            <button type="submit" class='bg-purple-700 hover:bg-purple-400 h-10 p-2'>Compare Weather</button>
+        </form>
+    </div>
 
-    <div class="comparison-container flex flex-row bg-slate-500 w-full items-center justify-center">
+    <div class="flex flex-row bg-slate-500 items-center justify-center">
         {% if weather_data %}
-            <div class="city-container w-full">
+            <div class="flex flex-col w-full">
                 {% include 'weatherapp/weather.html' with weather_data=weather_data daily_forecasts=daily_forecasts %}
             </div>
         {% endif %}
         {% if weather_data2 %}
-            <div class="city-container w-full">
+            <div class="flex flex-col w-full">
                 {% include 'weatherapp/weather.html' with weather_data=weather_data2 daily_forecasts=daily_forecasts2 %}
             </div>
         {% endif %}

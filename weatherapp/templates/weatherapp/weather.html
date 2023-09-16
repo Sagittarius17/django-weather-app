@@ -1,19 +1,24 @@
 {% if weather_data %}
-    <h1>City: {{ weather_data.city }}</h1>
-    <h2>Temperature: {{ weather_data.temperature }}°C</h2>
-    <p> Description: {{ weather_data.description }}</p>
-    <img src="https://openweathermap.org/img/w/{{ weather_data.icon }}.png" alt="{{ weather_data.description }}">
+    <div class='flex flex-col bg-gray-300 rounded-md m-2 p-1 items-center text-black'>
+        <h1>{{ weather_data.city }} {{ weather_data.date }}</h1>
+        <h2>Temperature: {{ weather_data.temperature }}°C</h2>
+        <p>Max. Temp.: {{ weather_data.max_temp }}°C - Min. Temp.: {{ weather_data.min_temp }}°C</p>
+        <p> Description: {{ weather_data.description }}</p>
+        <img src="https://openweathermap.org/img/w/{{ weather_data.icon }}.png" alt="{{ weather_data.description }}">
+    </div>
 {% endif %}
 
 {% if daily_forecasts %}
-    <h2>5-Day Forecast</h2>
-    <div class="forecast-container">
+    <h2 class='flex justify-center'>5-Day Weather Forecast</h2>
+    <div class="flex flex-col flex-wrap items-center justify-center">
         {% for forecast in daily_forecasts %}
-            <div class="forecast">
-                <h3>Today: {{ forecast.day }}</h3>
-                <p>Min. Temp.: {{ forecast.min_temp }}°C - Max. Temp.: {{ forecast.max_temp }}°C</p>
-                <p>Description: {{ forecast.description }}</p>
-                <img src="https://openweathermap.org/img/w/{{ forecast.icon }}.png" alt="{{ forecast.description }}">
+            <div class="flex flex-col bg-gray-300 rounded-md m-2 p-1 items-center text-black w-[50%]">
+                <h1 class='bg-gray-700 w-full text-center  rounded-md text-white'>({{ forecast.day }} - {{ forecast.date }})</h1>
+                <p>Max. Temp.: {{ forecast.max_temp }}°C - Min. Temp.: {{ forecast.min_temp }}°C</p>
+                <p class='flex flex-row items-center'>
+                    <img class='flex w-10 h-10' src="https://openweathermap.org/img/w/{{ forecast.icon }}.png" alt="{{ forecast.description }}">
+                    {{ forecast.description }}
+                </p>
             </div>
         {% endfor %}
     </div>
