@@ -7,6 +7,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Weather App</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <link rel="stylesheet" href="{% static 'style.css' %}">
 </head>
 
@@ -15,7 +16,7 @@
     <div class='flex justify-center items-center m-10'>
         <form method="post">
             {% csrf_token %}
-            <input type="text" name="city" class='bg-white h-[38px] pl-2 text-black' placeholder="Enter city name">
+            <input type="text" method='GET' name="city" id='city' class='bg-white h-[38px] pl-2 text-black' placeholder="Enter city name">
             <input type="text" name="city2" class='bg-white h-[38px] pl-2 text-black' placeholder="Enter city name">
             <button type="submit" class='bg-purple-700 hover:bg-purple-400 h-10 p-2'>Compare Weather</button>
         </form>
@@ -34,6 +35,39 @@
         {% endif %}
     </div>
 
+
+    <script>
+        jQuery(document).ready(function($) { // Ensure the document is fully loaded
+            function updateWeatherData() {
+                $.ajax({
+                    url: "/get_weather_data/",
+                    type: "GET",
+                    data: {
+                        city: $('#city').val()
+                    },
+                    success: function(data) {
+                        console.log(data);
+                        // Update the DOM elements with the new data
+                        if (data && data.weather_data) {
+                            $('#city').text(data.weather_data.city);
+                            $('#temperature').text(data.weather_data.temperature);
+                            $('#temp_minmax').text(data.weather_data.max_temp + " - " + data.weather_data.min_temp);
+                            $('#desc').text(data.weather_data.description);
+                        } else {
+                            console.error("Invalid data received:", data);
+                        }
+            
+                        // Schedule the next update
+                        setTimeout(updateWeatherData, 60000); // Update every 60 seconds
+                    }
+                });
+            }
+            
+            // Initial call to start the periodic updates
+            updateWeatherData();
+        });
+    </script>
+    
 </body>
 
 </html>

@@ -1,6 +1,7 @@
-from django.shortcuts import render
 import requests
 import datetime
+from django.http import JsonResponse
+from django.shortcuts import render
 from django.views.decorators.csrf import csrf_exempt
 
 @csrf_exempt
@@ -37,7 +38,6 @@ def index(request):
     else:
         return render(request, 'weatherapp/index.html')
 
-
 def fetch_weather_and_forecast(city, api_key, current_weather_url, forecast_url):
     formatted_url = current_weather_url.format(city=city, api_key=api_key)
     response = requests.get(formatted_url)
@@ -46,7 +46,10 @@ def fetch_weather_and_forecast(city, api_key, current_weather_url, forecast_url)
         return None, None
     
     response_data = response.json()
-    print("Response data:", response_data)
+    if "message" in response_data:
+        print(f"API Error: {response_data['message']}")
+        return None, None
+
     
     # Check if the 'coord' key exists and if it has both 'lat' and 'lon' keys
     if 'coord' in response_data and 'lon' in response_data['coord'] and 'lat' in response_data['coord']:
@@ -88,3 +91,16 @@ def fetch_weather_and_forecast(city, api_key, current_weather_url, forecast_url)
         })
 
     return weather_data, daily_forecasts
+
+def get_weather_data(request):
+    if request.method == 'GET':
+        city = request.GET.get('city')
+        print(f"Received city: {city}")
+    api_key = '09f07301cd82ad99e41e029a6e9d6afb'
+    current_weather_url = 'https://api.openweathermap.org/data/2.5/weather?q={city}&appid={api_key}'
+    forecast_url = 'https://api.openweathermap.org/data/2.5/forecast?lat={lat}&lon={lon}&appid={api_key}'
+    weather_data, daily_forecasts = fetch_weather_and_forecast(city, api_key, current_weather_url, forecast_url)
+    return JsonResponse({
+        'weather_data': weather_data,
+        'daily_forecasts': daily_forecasts
+    })

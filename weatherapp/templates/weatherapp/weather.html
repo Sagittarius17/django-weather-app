@@ -1,9 +1,9 @@
 {% if weather_data %}
     <div class='flex flex-col bg-gray-300 rounded-md m-2 p-1 items-center text-black'>
         <h1>{{ weather_data.city }} {{ weather_data.date }}</h1>
-        <h2>Temperature: {{ weather_data.temperature }}°C</h2>
-        <p>Max. Temp.: {{ weather_data.max_temp }}°C - Min. Temp.: {{ weather_data.min_temp }}°C</p>
-        <p> Description: {{ weather_data.description }}</p>
+        <h2 id='temperature'>Temperature: {{ weather_data.temperature }}°C</h2>
+        <p id='temp_minmax'>Max. Temp.: {{ weather_data.max_temp }}°C - Min. Temp.: {{ weather_data.min_temp }}°C</p>
+        <p id='desc'> Description: {{ weather_data.description }}</p>
         <img src="https://openweathermap.org/img/w/{{ weather_data.icon }}.png" alt="{{ weather_data.description }}">
     </div>
 {% endif %}
