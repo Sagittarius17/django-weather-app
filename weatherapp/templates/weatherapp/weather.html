@@ -1,6 +1,6 @@
 {% if weather_data %}
     <div class='flex flex-col bg-gray-300 rounded-md m-2 p-1 items-center text-black'>
-        <h1>{{ weather_data.city }} {{ weather_data.date }}</h1>
+        <h1 id='city1'>{{ weather_data.city }} {{ weather_data.date }}</h1>
         <h2 id='temperature'>Temperature: {{ weather_data.temperature }}°C</h2>
         <p id='temp_minmax'>Max. Temp.: {{ weather_data.max_temp }}°C - Min. Temp.: {{ weather_data.min_temp }}°C</p>
         <p id='desc'> Description: {{ weather_data.description }}</p>
@@ -23,3 +23,29 @@
         {% endfor %}
     </div>
 {% endif %}
+
+{% comment %} {% if weather_data2 %}
+    <div class='flex flex-col bg-gray-300 rounded-md m-2 p-1 items-center text-black'>
+        <h1 id='city2'>{{ weather_data2.city }} {{ weather_data2.date }}</h1>
+        <h2 id='temperature2'>Temperature: {{ weather_data2.temperature }}°C</h2>
+        <p id='temp_minmax2'>Max. Temp.: {{ weather_data2.max_temp }}°C - Min. Temp.: {{ weather_data2.min_temp }}°C</p>
+        <p id='desc2'> Description: {{ weather_data2.description }}</p>
+        <img src="https://openweathermap.org/img/w/{{ weather_data2.icon }}.png" alt="{{ weather_data2.description }}">
+    </div>
+{% endif %}
+
+{% if daily_forecasts2 %}
+    <h2 class='flex justify-center'>5-Day Weather Forecast</h2>
+    <div class="flex flex-col flex-wrap items-center justify-center">
+        {% for forecast in daily_forecasts2 %}
+            <div class="flex flex-col bg-gray-300 rounded-md m-2 p-1 items-center text-black w-[50%]">
+                <h1 class='bg-gray-700 w-full text-center  rounded-md text-white'>({{ forecast.day }} - {{ forecast.date }})</h1>
+                <p>Max. Temp.: {{ forecast.max_temp }}°C - Min. Temp.: {{ forecast.min_temp }}°C</p>
+                <p class='flex flex-row items-center'>
+                    <img class='flex w-10 h-10' src="https://openweathermap.org/img/w/{{ forecast.icon }}.png" alt="{{ forecast.description }}">
+                    {{ forecast.description }}
+                </p>
+            </div>
+        {% endfor %}
+    </div>
+{% endif %} {% endcomment %}

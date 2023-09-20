@@ -39,6 +39,7 @@ def index(request):
         return render(request, 'weatherapp/index.html')
 
 def fetch_weather_and_forecast(city, api_key, current_weather_url, forecast_url):
+    # print(city)
     formatted_url = current_weather_url.format(city=city, api_key=api_key)
     response = requests.get(formatted_url)
     if response.status_code != 200:
@@ -94,13 +95,14 @@ def fetch_weather_and_forecast(city, api_key, current_weather_url, forecast_url)
 
 def get_weather_data(request):
     if request.method == 'GET':
-        city = request.GET.get('city_1')
+        city1 = request.GET.get('city1')
+        city2 = request.GET.get('city2')
     api_key = '09f07301cd82ad99e41e029a6e9d6afb'
     current_weather_url = 'https://api.openweathermap.org/data/2.5/weather?q={city}&appid={api_key}'
     forecast_url = 'https://api.openweathermap.org/data/2.5/forecast?lat={lat}&lon={lon}&appid={api_key}'
-    weather_data, daily_forecasts = fetch_weather_and_forecast(city, api_key, current_weather_url, forecast_url)
-    print(f"Weather Data: {weather_data}")
-    # weather_data2, daily_forecasts2 = fetch_weather_and_forecast(city2, api_key, current_weather_url, forecast_url)
+    weather_data, daily_forecasts = fetch_weather_and_forecast(city1, api_key, current_weather_url, forecast_url)
+    weather_data2, daily_forecasts2 = fetch_weather_and_forecast(city2, api_key, current_weather_url, forecast_url)
+    print(f"Weather Data:  {weather_data} \nWeather Data2: {weather_data2}")
     return JsonResponse({
         'weather_data': weather_data,
         'daily_forecasts': daily_forecasts,

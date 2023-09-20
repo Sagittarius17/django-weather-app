@@ -30,7 +30,7 @@
             {% endif %}
             {% if weather_data2 %}
                 <div class="flex flex-col w-full">
-                    {% include 'weatherapp/weather.html' with weather_data=weather_data2 daily_forecasts=daily_forecasts2 %}
+                    {% include 'weatherapp/weather.html' with weather_data2=weather_data2 daily_forecasts2=daily_forecasts2 %}
                 </div>
             {% endif %}
         </div>
@@ -38,19 +38,27 @@
         <script>
             jQuery(document).ready(function($) { // Ensure the document is fully loaded
                 function updateWeatherData() {
+
                     $.ajax({
                         url: "/get_weather_data/",
                         type: "GET",
                         data: {
-                            city: $('#city_1').val()
+                            city1: $('#city_1').val(),
+                            city2: $('#city_2').val()
                         },
                         success: function(data) {
                             //console.log(data?.weather_data?.city);
-                            if (data && data.weather_data) {
-                                console.log(data.weather_data, data.weather_data.city);
+                            if (data && data.weather_data && data.weather_data2) {
+                                console.log(data.weather_data, data.weather_data2);
+                                $('#city1').text(data.weather_data.city + "°C");
                                 $('#temperature').text(data.weather_data.temperature + "°C");
                                 $('#temp_minmax').text(data.weather_data.max_temp + "°C - " + data.weather_data.min_temp + "°C");
                                 $('#desc').text(data.weather_data.description);
+
+                                $('#city2').text(data.weather_data.city + "°C");
+                                $('#temperature2').text(data.weather_data2.temperature + "°C");
+                                $('#temp_minmax2').text(data.weather_data2.max_temp + "°C - " + data.weather_data2.min_temp + "°C");
+                                $('#desc2').text(data.weather_data2.description);
                             } else {
                                 console.error("Invalid data received or weather data is missing:", data);
                             }
@@ -65,7 +73,10 @@
                 }
                 
                 // Initial call to start the periodic updates
-                updateWeatherData();
+                $("form").submit(function(e) {
+                    e.preventDefault();  // Prevent default form submission
+                    updateWeatherData();  // Update the weather data
+                });
             });
         </script>
     </body>
